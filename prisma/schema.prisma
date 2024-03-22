@@ -1,0 +1,24 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Location {
+  id Int @id @default(autoincrement())
+
+  parent   Location? @relation("LocationToChild", fields: [parentId], references: [id])
+  parentId Int?
+
+  locationName   String
+  locationNumber String?
+  area           Float?
+
+  children Location[] @relation("LocationToChild")
+
+  @@unique([parentId, locationNumber])
+  @@map("location")
+}
